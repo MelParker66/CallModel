@@ -81,7 +81,6 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
     });
 
     setResult(analysis);
-    setBasis(analysis.newBasis);
 
     if (isSelected) {
       selectRow(rowIndex, buildExportRow(analysis, strikeNum, bidNum));
