@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   analyzeCall,
   CallAnalysisResult,
   CallExportRow,
 } from "./callLadderLogic";
 import { useCallLadder } from "./callLadderContext";
+import {
+  CallRowInputState,
+  readCallLadderRowInputs,
+  saveCallLadderRowInputs,
+} from "./callLadderInputStorage";
 
 interface CallRowProps {
   rowIndex: number;
@@ -13,19 +18,39 @@ interface CallRowProps {
 export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
   const { selectedRows, selectRow, deselectRow } = useCallLadder();
 
-  const [ticker, setTicker] = useState("");
-  const [sharePrice, setSharePrice] = useState<number | "">("");
-  const [currentBasis, setCurrentBasis] = useState<number | "">("");
-  const [expiration, setExpiration] = useState("");
-  const [dte, setDte] = useState(7);
-  const [contracts, setContracts] = useState(1);
-  const [strike, setStrike] = useState<number | "">("");
-  const [bid, setBid] = useState<number | "">("");
-  const [ask, setAsk] = useState<number | "">("");
-  const [delta, setDelta] = useState<number | "">("");
-  const [probITM, setProbITM] = useState<number | "">("");
+  const [inputs, setInputs] = useState<CallRowInputState>(() =>
+    readCallLadderRowInputs(rowIndex)
+  );
   const [result, setResult] = useState<CallAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const {
+    ticker,
+    sharePrice,
+    currentBasis,
+    expiration,
+    dte,
+    contracts,
+    strike,
+    bid,
+    ask,
+    delta,
+    probITM,
+  } = inputs;
+
+  const updateInput = useCallback(
+    <K extends keyof CallRowInputState>(
+      key: K,
+      value: CallRowInputState[K]
+    ) => {
+      setInputs((prev) => {
+        const next = { ...prev, [key]: value };
+        saveCallLadderRowInputs(rowIndex, next);
+        return next;
+      });
+    },
+    [rowIndex]
+  );
 
   const isSelected = selectedRows[rowIndex] != null;
 
@@ -101,7 +126,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
 
   const numInput = (
     value: number | "",
-    setValue: (v: number | "") => void,
+    onValueChange: (value: number | "") => void,
     className: string
   ) => (
     <input
@@ -110,7 +135,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
       step="any"
       value={value}
       onChange={(e) =>
-        setValue(e.target.value === "" ? "" : Number(e.target.value))
+        onValueChange(e.target.value === "" ? "" : Number(e.target.value))
       }
     />
   );
@@ -129,12 +154,14 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
             placeholder="e.g. AAPL"
             value={ticker}
             autoComplete="off"
-            onChange={(e) => setTicker(e.target.value.toUpperCase())}
+            onChange={(e) =>
+              updateInput("ticker", e.target.value.toUpperCase())
+            }
           />
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Share Price</span>
-          {numInput(sharePrice, setSharePrice, "ladder-inp-share-price")}
+          {numInput(sharePrice, (value) => updateInput("sharePrice", value), "ladder-inp-share-price")}
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Current Basis</span>
@@ -144,7 +171,8 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
             step="any"
             value={currentBasis}
             onChange={(e) =>
-              setCurrentBasis(
+              updateInput(
+                "currentBasis",
                 e.target.value === "" ? "" : Number(e.target.value)
               )
             }
@@ -156,7 +184,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
             type="date"
             className="ladder-inp-exp"
             value={expiration}
-            onChange={(e) => setExpiration(e.target.value)}
+            onChange={(e) => updateInput("expiration", e.target.value)}
           />
         </label>
         <label className="ladder-field">
@@ -166,7 +194,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
             className="ladder-inp-dte"
             step={1}
             value={dte}
-            onChange={(e) => setDte(Number(e.target.value))}
+            onChange={(e) => updateInput("dte", Number(e.target.value))}
           />
         </label>
         <label className="ladder-field">
@@ -176,28 +204,30 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
             className="contracts-input"
             min={1}
             value={contracts}
-            onChange={(e) => setContracts(Number(e.target.value) || 1)}
+            onChange={(e) =>
+              updateInput("contracts", Number(e.target.value) || 1)
+            }
           />
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Strike</span>
-          {numInput(strike, setStrike, "ladder-inp-strike")}
+          {numInput(strike, (value) => updateInput("strike", value), "ladder-inp-strike")}
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Bid</span>
-          {numInput(bid, setBid, "ladder-inp-bid")}
+          {numInput(bid, (value) => updateInput("bid", value), "ladder-inp-bid")}
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Ask</span>
-          {numInput(ask, setAsk, "ladder-inp-ask")}
+          {numInput(ask, (value) => updateInput("ask", value), "ladder-inp-ask")}
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Delta</span>
-          {numInput(delta, setDelta, "ladder-inp-delta")}
+          {numInput(delta, (value) => updateInput("delta", value), "ladder-inp-delta")}
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Prob ITM</span>
-          {numInput(probITM, setProbITM, "ladder-inp-prob-itm")}
+          {numInput(probITM, (value) => updateInput("probITM", value), "ladder-inp-prob-itm")}
         </label>
         <div className="ladder-row-actions">
           <button
