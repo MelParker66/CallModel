@@ -47,7 +47,7 @@ export function analyzeCall(input: CallAnalysisInput): CallAnalysisResult {
   const returnPct = capital > 0 ? (premium / capital) * 100 : 0;
   const annualizedPct = dte > 0 ? returnPct * (365 / dte) : 0;
   const returnIfCalled = (strike - basis) * 100 * contracts + premium;
-  const breakeven = basis;
+  const breakeven = Number((basis - bid).toFixed(2));
   const newBasis = applyCallPremiumToBasis(basis, bid);
 
   return {
