@@ -211,27 +211,20 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
           {result && (
             <section className="card recommended-csp csp-row-detail-box">
               <div className="csp-ladder-analysis-block">
-                <div
-                  style={{
-                    border: "1px solid #d0d0d0",
-                    padding: "8px 12px",
-                  }}
-                >
-                  <p className="rec-detail">
-                    <strong>Premium Received:</strong>{" "}
-                    {result.premium.toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    })}
-                  </p>
-                  <p className="rec-detail">
-                    <strong>Return %:</strong> {result.returnPct.toFixed(2)}%
-                  </p>
-                  <p className="rec-detail">
-                    <strong>Annualized %:</strong>{" "}
-                    {result.annualizedPct.toFixed(2)}%
-                  </p>
-                </div>
+                <p className="rec-detail">
+                  <strong>Premium Received:</strong>{" "}
+                  {result.premium.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+                <p className="rec-detail">
+                  <strong>Return %:</strong> {result.returnPct.toFixed(2)}%
+                </p>
+                <p className="rec-detail">
+                  <strong>Annualized %:</strong>{" "}
+                  {result.annualizedPct.toFixed(2)}%
+                </p>
                 <p className="rec-detail">
                   <strong>Return If Called Away:</strong>{" "}
                   {result.returnIfCalled.toLocaleString("en-US", {
