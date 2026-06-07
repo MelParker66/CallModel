@@ -35,7 +35,7 @@ export function applyCallPremiumToBasis(
   basis: number,
   premiumPerShare: number
 ): number {
-  return basis - premiumPerShare;
+  return Number((basis - premiumPerShare).toFixed(2));
 }
 
 export function analyzeCall(input: CallAnalysisInput): CallAnalysisResult {
