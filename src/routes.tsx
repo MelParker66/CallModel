@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { CallLadder } from "../CallLadder";
 import { CallLadderExport } from "../CallLadderExport";
 import { AppLayout } from "./layouts/AppLayout";
@@ -53,14 +53,7 @@ export function AppRoutes() {
         </Route>
         <Route path="/call-ladder" element={<CallLadder />} />
         <Route path="/call-ladder-export" element={<CallLadderExport />} />
-        <Route
-          index
-          element={<Navigate to="/call-playbook/overview" replace />}
-        />
-        <Route
-          path="/call-playbook"
-          element={<Navigate to="/call-playbook/overview" replace />}
-        />
+        <Route index element={<CallLadder />} />
       </Route>
     </Routes>
   );
