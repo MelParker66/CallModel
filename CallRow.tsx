@@ -214,12 +214,12 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
           {numInput(strike, (value) => updateInput("strike", value), "ladder-inp-strike")}
         </label>
         <label className="ladder-field">
-          <span className="ladder-field-label">Bid</span>
-          {numInput(bid, (value) => updateInput("bid", value), "ladder-inp-bid")}
-        </label>
-        <label className="ladder-field">
           <span className="ladder-field-label">Ask</span>
           {numInput(ask, (value) => updateInput("ask", value), "ladder-inp-ask")}
+        </label>
+        <label className="ladder-field">
+          <span className="ladder-field-label">Bid</span>
+          {numInput(bid, (value) => updateInput("bid", value), "ladder-inp-bid")}
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Delta</span>
