@@ -213,7 +213,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
               <div className="csp-ladder-analysis-block">
                 <div
                   style={{
-                    backgroundColor: "#E8F4FF",
+                    border: "1px solid #d0d0d0",
                     padding: "8px 12px",
                   }}
                 >
