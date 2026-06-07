@@ -15,7 +15,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
 
   const [ticker, setTicker] = useState("");
   const [sharePrice, setSharePrice] = useState<number | "">("");
-  const [basis, setBasis] = useState<number | "">("");
+  const [currentBasis, setCurrentBasis] = useState<number | "">("");
   const [expiration, setExpiration] = useState("");
   const [dte, setDte] = useState(7);
   const [contracts, setContracts] = useState(1);
@@ -49,7 +49,7 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
     setError(null);
 
     const sharePriceNum = Number(sharePrice);
-    const basisNum = Number(basis);
+    const basisNum = Number(currentBasis);
     const strikeNum = Number(strike);
     const bidNum = Number(bid);
     const askNum = Number(ask);
@@ -138,7 +138,17 @@ export const CallRow: React.FC<CallRowProps> = ({ rowIndex }) => {
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Current Basis</span>
-          {numInput(basis, setBasis, "ladder-inp-basis")}
+          <input
+            type="number"
+            className="ladder-inp-basis"
+            step="any"
+            value={currentBasis}
+            onChange={(e) =>
+              setCurrentBasis(
+                e.target.value === "" ? "" : Number(e.target.value)
+              )
+            }
+          />
         </label>
         <label className="ladder-field">
           <span className="ladder-field-label">Expiration</span>
