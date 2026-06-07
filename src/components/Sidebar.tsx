@@ -21,7 +21,7 @@ const MAIN_NAV = [
 
 function isActivePath(pathname: string, matchPrefix: string, path: string) {
   if (matchPrefix === "/call-ladder") {
-    return pathname === "/call-ladder";
+    return pathname === "/call-ladder" || pathname === "/";
   }
   return pathname === path || pathname.startsWith(`${matchPrefix}/`);
 }

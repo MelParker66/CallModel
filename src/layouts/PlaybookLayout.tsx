@@ -1,15 +1,14 @@
-import { Outlet } from "react-router-dom";
 import { PlaybookSubsidebar } from "../components/Sidebar";
 
-export function PlaybookLayout() {
+interface PlaybookLayoutProps {
+  children: React.ReactNode;
+}
+
+export function PlaybookLayout({ children }: PlaybookLayoutProps) {
   return (
-    <div id="playbook-panel" className="content-panel content-panel-active">
-      <div className="playbook-shell">
-        <PlaybookSubsidebar />
-        <div className="playbook-pages">
-          <Outlet />
-        </div>
-      </div>
+    <div className="playbook-shell">
+      <PlaybookSubsidebar />
+      <div className="playbook-pages">{children}</div>
     </div>
   );
 }
