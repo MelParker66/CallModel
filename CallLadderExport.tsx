@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { CallExportRow, formatMoney } from "./callLadderLogic";
-import { readCallLadderSelections } from "./callLadderContext";
+import { formatMoney } from "./callLadderLogic";
+import {
+  getSelectedCallExportRows,
+  readCallLadderSelections,
+  useCallLadder,
+} from "./callLadderContext";
 
 export const CallLadderExport: React.FC = () => {
   const { pathname } = useLocation();
-  const [rows, setRows] = useState<CallExportRow[]>([]);
+  const { selectedRows } = useCallLadder();
 
-  useEffect(() => {
-    const selectedRows = readCallLadderSelections();
-    setRows(
-      selectedRows.filter((row): row is CallExportRow => row != null)
-    );
-  }, [pathname]);
+  const rows = useMemo(() => {
+    const storedRows = readCallLadderSelections();
+    const hasStoredSelections = storedRows.some((row) => row != null);
+    const source = hasStoredSelections ? storedRows : selectedRows;
+    return getSelectedCallExportRows(source);
+  }, [selectedRows, pathname]);
 
   return (
     <div id="call-export-panel" className="content-panel content-panel-active">

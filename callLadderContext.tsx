@@ -9,22 +9,26 @@ import { CALL_LADDER_ROW_COUNT, CallExportRow } from "./callLadderLogic";
 
 export const CALL_LADDER_SELECTIONS_KEY = "callLadderSelections";
 
-export function readCallLadderSelections(): (CallExportRow | null)[] {
-  const empty = Array(CALL_LADDER_ROW_COUNT).fill(null) as (CallExportRow | null)[];
+function emptySelections(): (CallExportRow | null)[] {
+  return Array(CALL_LADDER_ROW_COUNT).fill(null) as (CallExportRow | null)[];
+}
 
+export function readCallLadderSelections(): (CallExportRow | null)[] {
   try {
     const raw = sessionStorage.getItem(CALL_LADDER_SELECTIONS_KEY);
-    if (!raw) return empty;
+    if (!raw) return emptySelections();
 
     const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return empty;
+    if (!Array.isArray(parsed)) return emptySelections();
 
-    return empty.map((_, index) => {
+    const slots = emptySelections();
+    for (let index = 0; index < CALL_LADDER_ROW_COUNT; index++) {
       const row = parsed[index];
-      return row ?? null;
-    });
+      slots[index] = row ?? null;
+    }
+    return slots;
   } catch {
-    return empty;
+    return emptySelections();
   }
 }
 
@@ -32,6 +36,12 @@ export function saveCallLadderSelections(
   rows: (CallExportRow | null)[]
 ): void {
   sessionStorage.setItem(CALL_LADDER_SELECTIONS_KEY, JSON.stringify(rows));
+}
+
+export function getSelectedCallExportRows(
+  rows: (CallExportRow | null)[]
+): CallExportRow[] {
+  return rows.filter((row): row is CallExportRow => row != null);
 }
 
 interface CallLadderContextValue {
