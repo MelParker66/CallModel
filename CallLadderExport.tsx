@@ -1,11 +1,18 @@
-import React from "react";
-import { formatMoney } from "./callLadderLogic";
-import { useCallLadder } from "./callLadderContext";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { CallExportRow, formatMoney } from "./callLadderLogic";
+import { readCallLadderSelections } from "./callLadderContext";
 
 export const CallLadderExport: React.FC = () => {
-  const { selectedRows } = useCallLadder();
+  const { pathname } = useLocation();
+  const [rows, setRows] = useState<CallExportRow[]>([]);
 
-  const rows = selectedRows.filter((row) => row != null);
+  useEffect(() => {
+    const selectedRows = readCallLadderSelections();
+    setRows(
+      selectedRows.filter((row): row is CallExportRow => row != null)
+    );
+  }, [pathname]);
 
   return (
     <div id="call-export-panel" className="content-panel content-panel-active">
@@ -43,15 +50,15 @@ export const CallLadderExport: React.FC = () => {
                 <tbody>
                   {rows.map((row, idx) => (
                     <tr key={idx} className="analysis-data-row">
-                      <td>{row!.ticker || "—"}</td>
-                      <td>{row!.contracts}</td>
-                      <td>{row!.strike}</td>
-                      <td>${row!.premium.toFixed(2)}</td>
-                      <td>{row!.returnPct.toFixed(2)}%</td>
-                      <td>{row!.annualizedPct.toFixed(2)}%</td>
-                      <td>{formatMoney(row!.returnIfCalled)}</td>
-                      <td>${row!.breakeven.toFixed(2)}</td>
-                      <td>${row!.newBasis.toFixed(2)}</td>
+                      <td>{row.ticker || "—"}</td>
+                      <td>{row.contracts}</td>
+                      <td>{row.strike}</td>
+                      <td>${row.premium.toFixed(2)}</td>
+                      <td>{row.returnPct.toFixed(2)}%</td>
+                      <td>{row.annualizedPct.toFixed(2)}%</td>
+                      <td>{formatMoney(row.returnIfCalled)}</td>
+                      <td>${row.breakeven.toFixed(2)}</td>
+                      <td>${row.newBasis.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
